@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WeatherParser</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="main-header">
+        <h1 class="main-headline">SINOPTIK в кармане</h1>
+        <p>
+            <label for="search">Поиск</label>
+            <input type="text" name="search" id="search" placeholder="Введите город" class="search-field">
+            <button id="search-button">Найти</button>
+        </p>
+    </header>
+    <nav class="main-nav">
+        <div class="nav-button">
+            <a  class="nav-link" id="current-weather-link">Текущий прогноз</a>
+        </div>
+        <div class="nav-button">
+            <a class="nav-link" id="forecast-link">Прогноз на 5 дней</a>
+        </div>
+        <div class="nav-button">
+            <a class="nav-link" id="data-link">На чем остановились?</a>
+        </div>
+
+
+    </nav>
+    <main class="main-content">
+        <div id="weather-tab">
+            <div id="current-weather" class="current-box">
+                <div class="current-headline">
+                    <h3 class="current-subheadline">Текущая погода</h3>
+                    <div id="current-date" class="currentdate-field"></div>
+                </div>
+                <div class="weather-block">
+                    <div id="weather-ico"></div>
+                    <div id="weather-temp"></div>
+                    <div id="weather-info"></div>
+                </div>
+            </div>
+            <div id="hour-weather" class="hour-box">
+                <h3 class="hour-subheadline">Почасовая погода</h3>
+                <div class="hour-block">
+                    <div class="info-wrap">
+                        <span id="info-box2"></span><br>
+                        <br><br><br><br>
+                        Прогноз:<br>
+                        Температура:<br>
+                        Ощущается:<br>
+                        Ветер:
+                    </div>
+                    <div id="info-box"></div>
+                    <div id="weather-box1"></div>
+                    <div id="weather-box2"></div>
+                    <div id="weather-box3"></div>
+                    <div id="weather-box4"></div>
+                    <div id="weather-box5"></div>
+                    <div id="weather-box6"></div>
+
+                </div>
+            </div>
+            <div id="surround-weather" class="surround-box">
+                <h3 class="surround-subheadline">Погода в окрестностях</h3>
+                <div class="surround-block">
+                    <div id="surround-box1" class="surround-area"></div>
+                    <div id="surround-box2" class="surround-area"></div>
+                    <div id="surround-box3" class="surround-area"></div>
+                    <div id="surround-box4" class="surround-area"></div>
+                </div>
+            </div>
+        </div>
+        <div id="forecast-tab" style="display: none;">
+            <div id="forecast-weather" class="forecast-box">
+                <div id="forecast-box1" data-forecast-day-trigger class="forecast-box__day-item"></div>
+                <div id="forecast-box2" data-forecast-day-trigger class="forecast-box__day-item"></div>
+                <div id="forecast-box3" data-forecast-day-trigger class="forecast-box__day-item"></div>
+                <div id="forecast-box4" data-forecast-day-trigger class="forecast-box__day-item"></div>
+                <div id="forecast-box5" data-forecast-day-trigger class="forecast-box__day-item"></div>
+            </div>
+            <div id="forecast-hour-weather" class="hour-box">
+                <h3 class="hour-subheadline">Почасовая погода</h3>
+                <div class="hour-block">
+                    <div>
+                        <span id="info-box3"></span><br>
+                        <br><br><br><br>
+                        Прогноз:<br>
+                        Температура:<br>
+                        Ощущается:<br>
+                        Ветер:
+                    </div>
+                    <div id="weather-box11"></div>
+                    <div id="weather-box22"></div>
+                    <div id="weather-box33"></div>
+                    <div id="weather-box44"></div>
+                    <div id="weather-box55"></div>
+                    <div id="weather-box66"></div>
+                </div>
+            </div>
+        </div>
+        <div id="mistake-tab" style="display: none;">
+            <div class="mistake-box">
+                <img src="image/404_page_cover.jpg" width="864" height="578" alt="page-notfound">
+                <div id="mistake_text"></div>
+            </div>
+
+        </div>
+        <div id="data-tab" style="display: none;">
+             <div class="data-box">
+                <h3 class="data-subheadline">На чем остановились?</h3>
+                 <p id="data-text">Здесь Вы можете увидеть город, который вводился в строку поиска последним до закрытия сайта, а также удалить запись</p>
+                 <hr>
+                <div id="data-city"></div>
+                 <hr>
+                 <button id="show-btn">Показать</button>
+                <button id="clear-btn">Удалить</button>
+              </div>
+        </div>
+    </main>
+<script src="js/script.js"></script>
+</body>
+</html>
