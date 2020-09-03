@@ -77,7 +77,7 @@ function update5DaysForecast(fiveDaysForecast) {
         forecastBoxes[index].innerHTML = `${getDayOfWeek(itemDate)}<br>
                                ${itemDate.toLocaleDateString()}<br><br>
                                <img id="icon" src="http://openweathermap.org/img/wn/${icon}.png"><br><br>
-                               ${temp}\u00B0C<br><br>
+                               ${temp.toFixed(1)}\u00B0C<br><br>
                                ${description}`;
     });
     updateSingleForecastDay(entries[0][1]);
@@ -111,8 +111,8 @@ function updateSingleForecastDay(dayForecast) {
         weatherBoxes[index].innerHTML = `${itemDate.toLocaleTimeString()}<br>
                            <img class="forecast-icon forecast-icon-${index}" src="http://openweathermap.org/img/wn/${icon}.png"><br>
                            ${description}<br>
-                           ${temp} \u00B0C<br>
-                           ${feelLike} \u00B0C<br>
+                           ${temp.toFixed(1)} \u00B0C<br>
+                           ${feelLike.toFixed(1)} \u00B0C<br>
                            ${windSpeed} м/с, ${getWindByDeg(windDeg)}`;
     });
 }
@@ -126,6 +126,20 @@ function selectForecastDay(element, fiveDaysForecast) {
         updateSingleForecastDay(fiveDaysForecast[key]);
         element.classList.add("active");
     }
+}
+
+function setLocalStorage(queryValue) {
+    localStorage.setItem("forecastData", JSON.stringify({name: queryValue}));
+}
+
+function getLocalStorage() {
+    const data = localStorage.getItem("forecastData");
+
+    return null !== data ? JSON.parse(data) : null;
+}
+
+function clearLocalStorage() {
+    localStorage.removeItem("forecastData");
 }
 
 function getWeather(city) {
@@ -183,8 +197,8 @@ function getWeather(city) {
             let result = `<img id="icon" src=" http://openweathermap.org/img/wn/${weather_icon}.png"><br>
                                                 ${weather_description}`;
 
-            let resultTemp = `<span class="temp-span">${main_temp} \u00B0C</span><br>
-                                Ощущается ${main_feelstemp} \u00B0C`;
+            let resultTemp = `<span class="temp-span">${main_temp.toFixed(1)} \u00B0C</span><br>
+                                Ощущается ${main_feelstemp.toFixed(1)} \u00B0C`;
 
             let resultInfo = `Восход: ${sunrise}<br><br>
                             Закат: ${sunset}<br><br>
@@ -201,10 +215,9 @@ function getWeather(city) {
             currentDate.innerHTML = resultDate;
             searchField.value = resultCity;
         } else if (404 === request.status) {
-            let mistakeText = document.getElementById("mistake_text");
-            let mistakeResult = `Город "${searchField.value}" не указан в базе данных ресурса.<br><br>
-                                 Пожалуйста, введите другой город.`;
-            mistakeText.innerHTML = mistakeResult;
+            let mistakeText = document.getElementById("mistake-text");
+            mistakeText.innerHTML = `Город "${searchField.value}" не найден в базе данных ресурса.<br><br>
+                                     Введите, пожалуйста, другой город.`;
         }
         updateErrorTab(hasError);
     }
@@ -267,6 +280,7 @@ function getNearbyForecast(city) {
     let url = `http://api.openweathermap.org/data/2.5/find?${searchQuery}&cnt=50&appid=1833049079056b5453b544e3041de6c9&lang=ru&units=metric`;
     const circleRequest = new XMLHttpRequest();
 
+
     let surroundBox1 = document.getElementById("surround-box1");
     let surroundBox2 = document.getElementById("surround-box2");
     let surroundBox3 = document.getElementById("surround-box3");
@@ -297,26 +311,25 @@ function getNearbyForecast(city) {
 
 
             let resultNearCity = ` <div class="near-place">${name_nearCity}</div><div class="near-weather"><img id="icon2" src=" http://openweathermap.org/img/wn/${icon_nearCity}.png">
-                                   ${temp_nearCity}\u00B0C</div>`;
+                                   ${temp_nearCity.toFixed(1)}\u00B0C</div>`;
             surroundBox1.innerHTML = resultNearCity;
 
             let resultNearCity2 = ` <div class="near-place">${name_nearCity2}</div><div class="near-weather"><img id="icon2" src=" http://openweathermap.org/img/wn/${icon_nearCity2}.png">
-                                   ${temp_nearCity2}\u00B0C</div>`;
+                                   ${temp_nearCity2.toFixed(1)}\u00B0C</div>`;
             surroundBox2.innerHTML = resultNearCity2;
 
             let resultNearCity3 = ` <div class="near-place">  ${name_nearCity3}</div><div class="near-weather"><img id="icon2" src=" http://openweathermap.org/img/wn/${icon_nearCity3}.png">
-                                 ${temp_nearCity3}\u00B0C</div>`;
+                                 ${temp_nearCity3.toFixed(1)}\u00B0C</div>`;
             surroundBox3.innerHTML = resultNearCity3;
 
             let resultNearCity4 = ` <div class="near-place">${name_nearCity4} </div><div class="near-weather"><img id="icon2" src=" http://openweathermap.org/img/wn/${icon_nearCity4}.png">
-                                    ${(temp_nearCity4).toFixed(2)}\u00B0C</div>`;
+                                    ${(temp_nearCity4).toFixed(1)}\u00B0C</div>`;
             surroundBox4.innerHTML = resultNearCity4;
         }
 
     }
     circleRequest.send();
 }
-
 
 
 window.addEventListener("load", function () {
@@ -342,6 +355,15 @@ window.addEventListener("load", function () {
         if (hasError) {
             return;
         }
+        const { name: cityName } = getLocalStorage() || {};
+        if (undefined === cityName) {
+            dataCity.innerText = "Данные не сохранены";
+            displayButton.classList.add("hidden");
+        } else {
+            dataCity.innerText = cityName;
+            displayButton.classList.remove("hidden");
+        }
+
         document.getElementById("weather-tab").style.display = "none";
         document.getElementById("forecast-tab").style.display = "none";
         document.getElementById("data-tab").style.display = "block";
@@ -352,10 +374,11 @@ window.addEventListener("load", function () {
         });
     });
 
+
     const searchButton = document.getElementById('search-button');
-    const searchField = document.getElementById("search");
+    const searchField = document.getElementById('search');
     const clearButton = document.getElementById('clear-btn');
-    const showButton = document.getElementById('show-btn');
+    const displayButton = document.getElementById('display-btn');
     const dataCity = document.getElementById('data-city');
 
     dataCity.innerText = "";
@@ -364,21 +387,25 @@ window.addEventListener("load", function () {
         document.getElementById("mistake-tab").style.display = "none";
         const searchName = searchField.value;
         getWeather(searchName);
-        localStorage.setItem('city', searchName);
+        setLocalStorage(searchName);
     });
 
     clearButton.addEventListener("click", () => {
-        localStorage.clear();
+        clearLocalStorage();
         dataCity.innerText = "";
+        displayButton.classList.add("hidden");
     });
-
-    showButton.addEventListener("click", () => {
-        if(localStorage.getItem('city') == null){
-            dataCity.innerText = "Сайт открыт впервые";
+    displayButton.addEventListener("click", () => {
+        const { name: cityName } = getLocalStorage() || {};
+        if (undefined === cityName) {
+            dataCity.innerText = "Данные не сохранены";
+            displayButton.classList.add("hidden");
         } else {
-            dataCity.innerText = localStorage.getItem('city');
+            searchField.value = cityName;
+            searchButton.click();
         }
     });
+
 
     const geoLocation = navigator.geolocation;
     if (undefined === geoLocation) {
